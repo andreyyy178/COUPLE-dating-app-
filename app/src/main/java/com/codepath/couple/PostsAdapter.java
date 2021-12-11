@@ -95,6 +95,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             Like like = new Like();
             like.setPoster(post.getUser());
             like.setLiker(currentUser);
+
+            like.setLikerString(currentUser.getObjectId());
+            like.setPosterString(post.getUser().getObjectId());
+
             like.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {

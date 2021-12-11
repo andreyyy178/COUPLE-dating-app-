@@ -4,15 +4,18 @@ import static com.codepath.couple.FilterActivity.TAG;
 import static com.codepath.couple.R.id.flContainer;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.codepath.couple.fragments.ComposeFragment;
+import com.codepath.couple.fragments.MatchesFragment;
 import com.codepath.couple.fragments.MessageFragment;
 import com.codepath.couple.fragments.PostsFragment;
 import com.codepath.couple.fragments.ProfileFragment;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment fragment;
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.action_compose:
-                        fragment = new ComposeFragment();
+                        fragment = new MatchesFragment();
                         break;
 
 

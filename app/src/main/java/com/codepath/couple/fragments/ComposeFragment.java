@@ -26,10 +26,13 @@ import android.widget.Toast;
 
 import com.codepath.couple.LoginActivity;
 import com.codepath.couple.Post;
+import com.codepath.couple.ProfileURLString;
 import com.codepath.couple.R;
 import com.codepath.couple.WelcomePageActivity;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -66,7 +69,7 @@ public class ComposeFragment extends Fragment {
         btnCaptureImage=view.findViewById(R.id.btnCaptureImage);
         ivPostImage=view.findViewById(R.id.ivPostImage);
         btnSubmit=view.findViewById(R.id.btnSubmit);
-        btnLogout= view.findViewById(R.id.btnLogout);
+//        btnLogout= view.findViewById(R.id.btnLogout);
 
 
         btnCaptureImage.setOnClickListener(new View.OnClickListener() {
@@ -91,17 +94,21 @@ public class ComposeFragment extends Fragment {
                     return;
                 }
                 ParseUser currentUser = ParseUser.getCurrentUser();
-                savepost(description,currentUser,photoFile);
+                try {
+                    savepost(description,currentUser,photoFile);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser.logOut();
-                Intent i = new Intent(getContext(), WelcomePageActivity.class);
-                startActivity(i);
-            }
-        });
+//        btnLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ParseUser.logOut();
+//                Intent i = new Intent(getContext(), WelcomePageActivity.class);
+//                startActivity(i);
+//            }
+//        });
 
 
     }
@@ -159,19 +166,34 @@ public class ComposeFragment extends Fragment {
 
 
     }
-    private void savepost(String description, ParseUser currentUser, File photoFile) {
+    private void savepost(String description, ParseUser currentUser, File photoFile) throws ParseException {
 
 
+
+        if(ProfileURLString.url != null) {
+            ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+            query.include(Post.KEY_USER);
+            query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+            ParseObject recentPost = query.getFirst();
+            recentPost.deleteInBackground();
+        }
+
+
+        ParseUser user = ParseUser.getCurrentUser();
+        String myGender = user.get("Gender").toString();
+        String myAge = user.get("Age").toString();
 
         Post post=new Post();
         post.setDescription(description);
         post.setImage(new ParseFile(photoFile));
         post.setUser(currentUser);
+        post.put("gender", myGender);
+        post.put("age", myAge);
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if(e!=null){
-                    Log.e(TAG,"Error while saving",e);
+                    Log.e(TAG,"Erroe while saving",e);
                     Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
                 }
                 Log.i(TAG,"Post save was successful");

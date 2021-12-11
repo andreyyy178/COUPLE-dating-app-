@@ -100,7 +100,11 @@ public class PostsFragment extends Fragment {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                queryPost();
+                try {
+                    queryPost();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -124,7 +128,11 @@ public class PostsFragment extends Fragment {
 
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryPost();
+        try {
+            queryPost();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         btnFilter = view.findViewById(R.id.btnFilter);
         btnFilter.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +147,7 @@ public class PostsFragment extends Fragment {
     }
 
 
-    protected void queryPost() {
+    protected void queryPost() throws ParseException {
 
         ParseUser user = ParseUser.getCurrentUser();
 
