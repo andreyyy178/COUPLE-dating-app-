@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.couple.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -119,7 +121,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvUsername.setText(post.getUser().getUsername());
             ParseFile image = post.getImage();
             if (image != null) {
-                Glide.with(context).load(image.getUrl()).into(ivImage);
+//                Glide.with(context).load(image.getUrl()).transform(new RoundedCorners(100)).into(ivImage);
+                Glide.with(context)
+                        .load(image.getUrl())
+                        .transform(new CenterCrop(),new RoundedCorners(25))
+                        .into(ivImage);
             }
 
         }
